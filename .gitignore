@@ -1,0 +1,11 @@
+data/imagenette2
+data/ade20k
+data/MRIhead
+data/MRIhead2D
+
+*.pyc
+*.pth
+*.pyd
+
+models/segmentation_from_dinov3/models/utils/ops/build
+models/segmentation_from_dinov3/models/utils/ops/MultiScaleDeformableAttention.egg-info

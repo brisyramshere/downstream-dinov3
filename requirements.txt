@@ -1,0 +1,7 @@
+torch
+torchvision
+timm
+PyYAML
+tqdm
+einops
+scikit-learn
