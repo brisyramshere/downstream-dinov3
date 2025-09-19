@@ -1,6 +1,6 @@
 # DINOv3 Downstream Tasks
 
-Read this in Chinese: [readme_zh.md](readme_zh.md)
+Read this in Chinese: [README_zh.md](README_zh.md)
 
 Downstream tasks based on Meta AI's DINOv3 model, focusing on classification and segmentation. This project integrates the full DINOv3 source code, implements multiple architectural variants, and supports both natural image analysis and medical image processing.
 
