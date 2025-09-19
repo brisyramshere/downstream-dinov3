@@ -3,6 +3,29 @@ import torch.nn as nn
 import tqdm
 import os
 
+def get_segmentation_model(config: dict):
+    model_type = config['model'].get('model_type', 'dpt')  # Default to DPT if not specified
+    backbone_name = config['model']['backbone_name']
+    num_classes = config['model']['num_classes']
+
+    if model_type == 'unet_with_adapter':
+        from models.dinov3_unet_with_adapter import DinoV3_UNetWithAdapter  # Add new model
+        model = DinoV3_UNetWithAdapter(backbone_name=backbone_name,num_classes=num_classes)
+    elif model_type == 'unet':
+        from models.dinov3_unet import DinoV3_UNet
+        model = DinoV3_UNet(backbone_name=backbone_name,num_classes=num_classes)
+    elif model_type == 'dpt':
+        from models.dinov3_seg_dpt import DinoV3_DPT
+        model = DinoV3_DPT(backbone_name=backbone_name,num_classes=num_classes)
+    elif model_type == 'unet_fapm':
+        from models.dinov3_unet_fapm import DinoV3_UNetFAPM
+        model = DinoV3_UNetFAPM(backbone_name=backbone_name,num_classes=num_classes)
+    else:
+        raise ValueError(f"Unknown model_type: {model_type}")
+    
+    return model
+
+
 def create_optimizer(params_to_train, config: dict):
     """
     Creates an optimizer based on the configuration.

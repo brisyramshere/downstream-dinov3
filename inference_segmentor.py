@@ -6,9 +6,7 @@ import numpy as np
 from torchvision import transforms
 import os
 import torch.nn.functional as F
-
-from models.segmentation_model import DinoV3_DPT
-from models.dinov3_unet_full import DinoV3_UNet_Full
+import engine
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DINOv3 Segmentation Inference', add_help=False)
@@ -37,25 +35,7 @@ def load_model(checkpoint_path, device):
     config = checkpoint['config']
 
     # Build Model, ensuring all necessary parameters from config are used
-    model_type = config['model'].get('model_type', 'dpt')  # Default to DPT if not specified
-    
-    if model_type == 'unet_full':
-        # Use DinoV3_UNet_Full (complete DINOv3_Adapter + UNet)
-        model = DinoV3_UNet_Full(
-            backbone_name=config['model']['backbone_name'],
-            num_classes=config['model']['num_classes'],
-            interaction_indexes=config['model'].get('interaction_indexes'),
-            decoder_channels=tuple(config['model'].get('decoder_channels')),
-        )
-    elif model_type == 'dpt':
-        # Use original DinoV3_DPT model
-        model = DinoV3_DPT(
-            backbone_name=config['model']['backbone_name'],
-            num_classes=config['model']['num_classes'],
-            skip_connection_layers=config['model'].get('skip_connection_layers')
-        )
-    else:
-        raise ValueError(f"Unknown model_type: {model_type}. Supported: 'dpt', 'unet_full'")
+    model = engine.get_segmentation_model(config)
     
 
     model.load_state_dict(checkpoint['model'])

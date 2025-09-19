@@ -8,8 +8,8 @@ from torchvision import transforms
 import tqdm
 
 # Import all required components
-from data.classification_dataset import ImageNetClassificationDataset
-from models.classification_model import DinoV3LinearClassifier
+from data.Dataset_Imagenette2 import Imagenette2Dataset
+from models.dinov3_linear_cls import DinoV3LinearClassifier
 import engine
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -92,8 +92,8 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize(config['data']['mean'], config['data']['std']),
     ])
-    dataset_train = ImageNetClassificationDataset(root_dir=config['data']['root_dir'], split='train', transform=transform_train)
-    dataset_val = ImageNetClassificationDataset(root_dir=config['data']['root_dir'], split='val', transform=transform_val)
+    dataset_train = Imagenette2Dataset(root_dir=config['data']['root_dir'], split='train', transform=transform_train)
+    dataset_val = Imagenette2Dataset(root_dir=config['data']['root_dir'], split='val', transform=transform_val)
     
     # --- Build Model ---
     model = DinoV3LinearClassifier(

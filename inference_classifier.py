@@ -5,8 +5,8 @@ from PIL import Image
 from torchvision import transforms
 import os
 
-from models.classification_model import DinoV3LinearClassifier
-from data.classification_dataset import ImageNetClassificationDataset
+from models.dinov3_linear_cls import DinoV3LinearClassifier
+from data.Dataset_Imagenette2 import Imagenette2Dataset
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DINOv3 Inference', add_help=False)
@@ -54,7 +54,7 @@ def main(args):
 
     # --- Get Class Names ---
     # Create a dataset instance just to get the class mapping
-    dataset_for_classes = ImageNetClassificationDataset(root_dir=config['data']['root_dir'], split='val')
+    dataset_for_classes = Imagenette2Dataset(root_dir=config['data']['root_dir'], split='val')
     class_names = dataset_for_classes.classes
 
     # --- Perform Inference ---

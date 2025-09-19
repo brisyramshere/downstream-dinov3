@@ -4,8 +4,6 @@
 data:
   # This path points to the dataset downloaded by download_data.py
   root_dir: downstrean-dinov3/data/imagenette2
-  mean: [0.485, 0.456, 0.406]
-  std: [0.229, 0.224, 0.225]
   input_size: 224
 
 # -- Model Settings --

@@ -88,3 +88,15 @@ class LovaszSoftmax(nn.Module):
         logits = F.softmax(output, dim=1)
         loss = lovasz_softmax(logits, target, ignore=self.ignore_index)
         return loss
+
+class Focal_Dice_Loss(nn.Module):
+    def __init__(self, smooth=1, gamma=2, alpha=None, ignore_index=255):
+        super(Focal_Dice_Loss, self).__init__()
+        self.focal = FocalLoss(gamma=gamma, alpha=alpha, ignore_index=ignore_index)
+        self.dice = DiceLoss(smooth=smooth, ignore_index=ignore_index)
+    
+    def forward(self, output, target):
+        focal_loss = self.focal(output, target)
+        dice_loss = self.dice(output, target)
+        # print("focalloss:"+str(focal_loss.item())+"----diceloss"+str(dice_loss.item()))
+        return 10*focal_loss + 3*dice_loss

@@ -229,7 +229,7 @@ class RandomRotate(object):
                 scale=1.0,
                 angle=rotate_degree,
                 interpolation=Image.NEAREST,
-                fill=255,  # Changed from 250 to 255 (standard ignore_index)
+                fill=255, 
                 shear=0.0,
             ),
         )
