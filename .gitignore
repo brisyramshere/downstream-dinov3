@@ -4,6 +4,7 @@ output/*
 .claude
 .vscode
 checkpoints/*
+__pycache__
 
 *.pyc
 *.pth

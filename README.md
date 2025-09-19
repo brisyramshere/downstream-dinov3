@@ -1,225 +1,227 @@
 # DINOv3 Downstream Tasks
 
-基于 Meta AI DINOv3 模型的下游任务实现，专注于分类和分割任务。该项目整合了完整的 DINOv3 源码，实现了多种架构变体，支持自然图像分析和医学图像处理。
+Read this in Chinese: [readme_zh.md](readme_zh.md)
 
-## 🚀 项目特色
+Downstream tasks based on Meta AI's DINOv3 model, focusing on classification and segmentation. This project integrates the full DINOv3 source code, implements multiple architectural variants, and supports both natural image analysis and medical image processing.
 
-- **完整的 DINOv3 集成**: 包含官方 DINOv3 完整源码，支持 vits16、vitb16、vitl16、vit7b16 等多种预训练模型
-- **多架构支持**: 实现了 UNet、DPT、FAPM 等多种分割架构和线性分类器
-- **任务多样性**: 支持分类(ImageNette)、自然图像分割(ADE20K)、医学图像分割等多个任务
-- **统一接口**: 提供统一的训练、推理框架，支持配置文件驱动的灵活切换
+## 🚀 Highlights
 
-## 📁 项目结构
+- Complete DINOv3 integration: includes the official DINOv3 source code and supports multiple pretrained models (vits16, vitb16, vitl16, vit7b16)
+- Multiple architectures: implementations of UNet, DPT, FAPM segmentation architectures and a linear classifier
+- Task diversity: supports classification (ImageNette), natural image segmentation (ADE20K), and medical image segmentation
+- Unified interface: a unified training and inference framework, with flexible switching driven by config files
+
+## 📁 Project Structure
 
 ```
-├── dinov3/                    # DINOv3 完整源码
-│   ├── models/               # DINOv3 模型实现
-│   ├── data/                 # 官方数据加载器
-│   ├── eval/                 # 官方评估脚本
-│   └── configs/              # DINOv3 官方配置
-├── models/                    # 下游任务模型实现
-│   ├── backbones.py          # 统一的 DINOv3 backbone 加载器
-│   ├── dinov3_unet.py        # DINOv3-UNet 分割模型
-│   ├── dinov3_seg_dpt.py     # DINOv3-DPT 分割模型
-│   ├── dinov3_unet_fapm.py   # DINOv3-FAPM 高级分割模型
-│   └── dinov3_linear_cls.py  # DINOv3 线性分类器
-├── data/                      # 数据集加载器
-│   ├── Dataset_ADE20k.py     # ADE20K 分割数据集
-│   ├── Dataset_Imagenette2.py # ImageNette 分类数据集
-│   └── dinov3_transforms.py  # DINOv3 官方数据增强
-├── configs/                   # 任务配置文件
+├── dinov3/                    # Full DINOv3 source code
+│   ├── models/               # DINOv3 model implementations
+│   ├── data/                 # Official data loaders
+│   ├── eval/                 # Official evaluation scripts
+│   └── configs/              # Official DINOv3 configs
+├── models/                    # Downstream task models
+│   ├── backbones.py          # Unified DINOv3 backbone loader
+│   ├── dinov3_unet.py        # DINOv3-UNet segmentation model
+│   ├── dinov3_seg_dpt.py     # DINOv3-DPT segmentation model
+│   ├── dinov3_unet_fapm.py   # DINOv3-FAPM advanced segmentation model
+│   └── dinov3_linear_cls.py  # DINOv3 linear classifier
+├── data/                      # Dataset loaders
+│   ├── Dataset_ADE20k.py     # ADE20K segmentation dataset
+│   ├── Dataset_Imagenette2.py # ImageNette classification dataset
+│   └── dinov3_transforms.py  # Official DINOv3 transforms
+├── configs/                   # Task configs
 │   ├── classification_imagenette.yaml
 │   └── segmentation_ade20k.yaml
-├── train_classifier.py       # 分类任务训练脚本
-├── train_segmentor.py        # 分割任务训练脚本
-├── inference_classifier.py   # 分类推理脚本
-└── inference_segmentor.py    # 分割推理脚本
+├── train_classifier.py       # Classification training script
+├── train_segmentor.py        # Segmentation training script
+├── inference_classifier.py   # Classification inference script
+└── inference_segmentor.py    # Segmentation inference script
 ```
 
-## 🛠️ 环境安装
+## 🛠️ Installation
 
-### 依赖安装
+### Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-核心依赖：
+Core dependencies:
 - torch, torchvision
 - timm, PyYAML, tqdm
 - einops, scikit-learn
 
-### 预训练权重下载
-下载 DINOv3 官方预训练权重到 `checkpoints/` 目录：
+### Pretrained Weights
+Download official DINOv3 pretrained weights into the `checkpoints/` directory:
 
 ```bash
 mkdir checkpoints
-# 下载所需的预训练权重文件到此目录
+# Download the required pretrained weight files into this directory
 # dinov3_vits16_pretrain_lvd1689m-08c60483.pth
 # dinov3_vitb16_pretrain_lvd1689m-73cec8be.pth
 # dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth
 # dinov3_vit7b16_pretrain_lvd1689m-a955f4ea.pth
 ```
 
-## 🎯 支持的任务和数据集
+## 🎯 Supported Tasks and Datasets
 
-### 分类任务
-- **ImageNette2**: 10类图像分类任务
-- 特征提取方式：cls token、patch average、或两者结合
+### Classification
+- ImageNette2: 10-class image classification
+- Feature extraction: cls token, patch average, or their combination
 
-### 分割任务
-- **ADE20K**: 150类自然场景分割
-- **MRI Head 2D**: 医学图像二分类分割
-- 架构选择：UNet、DPT、FAPM
+### Segmentation
+- ADE20K: 150-class scene segmentation
+- MRI Head 2D: binary medical image segmentation
+- Architectures: UNet, DPT, FAPM
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 数据准备
+### Data Preparation
 
-**ImageNette2 分类数据集**:
+ImageNette2:
 ```bash
 python data/download_imagenette2.py
 ```
 
-**ADE20K 分割数据集**:
+ADE20K:
 ```bash
 python data/download_ade20k.py
 ```
 
-### 训练
+### Training
 
-**图像分类训练**:
+Image classification:
 ```bash
 python train_classifier.py --config configs/classification_imagenette.yaml
 ```
 
-**图像分割训练**:
+Image segmentation:
 ```bash
 python train_segmentor.py --config configs/segmentation_ade20k.yaml
 ```
 
-### 推理
+### Inference
 
-**分类推理**:
+Classification inference:
 ```bash
 python inference_classifier.py --checkpoint output/xxx/checkpoint.pth --image path/to/image.jpg
 ```
 
-**分割推理**:
+Segmentation inference:
 ```bash
 python inference_segmentor.py --checkpoint output/xxx/checkpoint.pth --image path/to/image.jpg
 ```
 
-## ⚙️ 配置系统
+## ⚙️ Configuration System
 
-项目采用 YAML 配置文件系统，支持灵活的模型和训练参数配置。
+YAML-based configuration system with flexible model and training hyperparameters.
 
-## 🏗️ 模型架构
+## 🏗️ Architectures
 
 ### DINOv3 Backbone
-- 统一的预训练模型加载接口 (`models/backbones.py`)
-- 支持 vits16, vitb16, vitl16, vit7b16 变体
-- 本地检查点管理，backbone 参数默认冻结
+- Unified pretrained model loading interface (`models/backbones.py`)
+- Supports vits16, vitb16, vitl16, vit7b16 variants
+- Local checkpoint management; backbone params frozen by default
 
-### 分割模型家族
+### Segmentation Families
 
-**DinoV3_UNet** (`models/dinov3_unet.py`)（自创的类unet融合结构，实测分割精度最高，而且参数两也很少）:
-- 简洁的 UNet 架构，多层特征融合
-- 适用于标准分割任务
+DinoV3_UNet (`models/dinov3_unet.py`) — a custom UNet-like fusion design that achieved the best segmentation accuracy in our tests with a small parameter count:
+- Simple UNet architecture with multi-level feature fusion
+- Suited for standard segmentation tasks
 
-**DinoV3_DPT** (`models/dinov3_seg_dpt.py`)（论文：https://arxiv.org/abs/2509.00833v1）:
-- Dense Prediction Transformer 架构
-- 基于特征投影和融合
+DinoV3_DPT (`models/dinov3_seg_dpt.py`) — Paper: https://arxiv.org/abs/2509.00833v1
+- Dense Prediction Transformer architecture
+- Based on feature projection and fusion
 
-**DinoV3_FAPM** (`models/dinov3_unet_fapm.py`)（论文：https://arxiv.org/abs/2508.20909v1）:
+DinoV3_FAPM (`models/dinov3_unet_fapm.py`) — Paper: https://arxiv.org/abs/2508.20909v1
 - Feature Alignment Pyramid Module
-- 支持多尺度分割，适用于复杂场景
+- Supports multi-scale segmentation for complex scenes
 
-### 分类模型
+### Classification Model
 
-**DinoV3LinearClassifier** (`models/dinov3_linear_cls.py`):
-- 线性分类头，支持多种特征提取方式
-- 特征来源：cls token、patch average、或两者结合
+DinoV3LinearClassifier (`models/dinov3_linear_cls.py`):
+- Linear classification head supporting multiple feature extraction modes
+- Feature sources: cls token, patch average, or both
 
-## 📊 训练流程
+## 📊 Training Pipeline
 
-1. **配置加载**: 从 YAML 文件加载所有训练参数
-2. **数据准备**: 自动选择对应的数据集和数据增强
-3. **模型构建**: 根据配置动态选择模型架构
-4. **训练循环**: 统一的训练引擎，支持检查点保存和恢复
-5. **评估指标**:
-   - 分类：Top-1/Top-5 准确率
-   - 分割：mIoU (mean Intersection over Union)
+1. Config loading: load all training params from YAML
+2. Data preparation: automatically selects dataset and transforms
+3. Model building: dynamically choose architecture per config
+4. Training loop: unified engine with checkpoint save/restore
+5. Metrics:
+   - Classification: Top-1/Top-5 accuracy
+   - Segmentation: mIoU (mean Intersection over Union)
 
-## 🔧 推理工具
+## 🔧 Inference Tools
 
-### 单图像推理
-支持单张图像的快速推理，输出可视化结果。
+### Single Image Inference
+Quick inference for a single image with visualized outputs.
 
-### 批量推理
-支持批处理多张图像，提高推理效率。
+### Batch Inference
+Batch multiple images to improve throughput.
 
-### 3D 医学图像推理
-专门针对医学图像的分块批处理推理工具。
+### 3D Medical Inference
+Chunked batch inference utilities tailored for medical images.
 
-## 🎨 数据增强
+## 🎨 Data Augmentation
 
-### 标准增强
+### Standard
 - RandomResizedCrop
 - RandomHorizontalFlip
-- 标准化 (ImageNet 统计值)
+- Normalization (ImageNet stats)
 
-### 任务专用增强
-- **MRI 图像**: FixedGamma(0.75) 用于低灰度像素增强
-- **自然图像**: 标准 ImageNet 预处理
+### Task-specific
+- MRI: FixedGamma(0.75) for low-intensity enhancement
+- Natural images: standard ImageNet preprocessing
 
-## 📈 性能优化
+## 📈 Performance Tips
 
-- **内存优化**: 推理时使用 `torch.no_grad()` 和 `model.eval()`
-- **批处理**: 支持批量推理，提高 GPU 利用率
-- **参数冻结**: DINOv3 backbone 参数冻结，只训练任务头
-- **混合精度**: 支持自动混合精度训练 (可配置)
+- Memory: use `torch.no_grad()` and `model.eval()` during inference
+- Batching: support batched inference to utilize GPU
+- Frozen params: freeze DINOv3 backbone and train task heads only
+- AMP: optional automatic mixed precision training
 
-## 🔍 模型选择指南
+## 🔍 Model Selection Guide
 
-### 选择 Backbone
-- **vits16**: 最轻量，适合快速验证和资源受限环境
-- **vitb16**: 平衡性能和效率
-- **vitl16**: 更好的性能，需要更多计算资源
-- **vit7b16**: 最佳性能，需要大量计算资源
+### Backbone
+- vits16: lightest, good for quick validation and constrained environments
+- vitb16: balanced performance and efficiency
+- vitl16: higher performance, requires more compute
+- vit7b16: best performance, requires substantial compute
 
-### 选择分割架构
-- **UNet**: 简洁高效，适合标准分割任务
-- **DPT**: 特征投影融合，适合需要精细特征的任务
-- **FAPM**: 多尺度金字塔，适合复杂场景分割
+### Segmentation Architecture
+- UNet: simple and efficient for standard tasks
+- DPT: projection + fusion for tasks needing fine features
+- FAPM: multi-scale pyramid for complex scenes
 
-## 📝 输出和日志
+## 📝 Outputs and Logs
 
-### 检查点保存
-- `checkpoint.pth`: 最新检查点
-- `best_checkpoint.pth`: 最佳性能检查点
+### Checkpoints
+- `checkpoint.pth`: latest
+- `best_checkpoint.pth`: best
 
-### 训练日志
-- 实时显示训练损失和评估指标
-- 支持自定义打印频率
-- 自动保存训练配置
+### Training Logs
+- Realtime training loss and metrics
+- Configurable print frequency
+- Auto-save training config
 
-## 🤝 贡献指南
+## 🤝 Contributing
 
-1. Fork 本仓库
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开 Pull Request
+1. Fork this repo
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详细信息。
+This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
 
-## 🙏 致谢
+## 🙏 Acknowledgements
 
-- Meta AI 团队的 [DINOv3](https://github.com/facebookresearch/dinov3) 项目
-- PyTorch 社区和相关开源项目
+- Meta AI's [DINOv3](https://github.com/facebookresearch/dinov3)
+- The PyTorch community and related open-source projects
 
-## 📞 联系方式
+## 📞 Contact
 
-如有问题或建议，请通过 [Issues](https://github.com/your-username/downstream-dinov3/issues) 与我们联系。
+For questions or suggestions, please open an [Issue](https://github.com/your-username/downstream-dinov3/issues).
